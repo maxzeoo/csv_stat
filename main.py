@@ -18,6 +18,11 @@ def safe_float(s):
 def cal_nums(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
+        for k in range(len(reader.fieldnames)):
+            reader.fieldnames[k]=reader.fieldnames[k].strip()
+        if 'subject' not in reader.fieldnames or 'score' not in reader.fieldnames:
+            print('检测到表格数据问题：请检查您表格格式和数据')
+            return None
         total_rows = 0
         score_all = {
             "max": None,
@@ -78,19 +83,22 @@ def cal_nums(file_path):
 
 def main():
     if len(sys.argv) < 2:
-        print("用法：python csvstat.py 文件1.csv 文件1.csv...")
+        print("用法：python csvstat.py 文件1.csv 文件2.csv...")
         sys.exit(1)
     file_paths = sys.argv[1:]
     for file_path in file_paths:
         print(f"正在处理你的文件：{file_path}")
         try:
-            cal_nums(file_path)
+            ret=cal_nums(file_path)
         except FileNotFoundError:
             print(f"该文件{file_path}不存在")
             continue
         except UnicodeDecodeError:
             print(f"错误：文件{file_path}编码不是utf-8，无法读取")
             continue
+        else :
+            if ret is  None:
+                continue
 
 
 if __name__ == "__main__":
