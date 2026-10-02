@@ -1,53 +1,95 @@
 import csv
-import statistics
 import sys
 
 
-with open(r'scores.csv',"r",encoding="utf-8") as f:
-    reader = csv.DictReader(f)
-    total_rows=0
-    score_list=[]
-    subject_groups={}
-
-    #计算行数#
-    for row in reader:
-        total_rows+=1
-
-        #排除空值#
-        subj = row["subject"]
-        if  subj.strip() == "":
-            subj = "未标记"
-        # 这里如果读取不到科目，则输出为nothing#
-
-        if subj not in subject_groups:
-                subject_groups[subj]={'count':0, 'score':[]}
-        subject_groups[subj]['count']+=1
-
-        #记录分数，如果为空值，则不计入总计算，避免记为0#
-        score_str=row["score"].strip()
-        if score_str !="":
-            score_val=float(score_str)
-            score_list.append(score_val)
-            subject_groups[subj]['score'].append(score_val)
+# 判断分数类型#
+def safe_float(s):
+    s = s.strip()
+    if s == "":
+        return None
+    try:
+        return float(s)
+    except ValueError:
+        return None
 
 
-    if score_list :
-        mean=statistics.mean(score_list)
-        Max=max(score_list)
-        Min=min(score_list)
+def cal_nums(file_path):
+    with open(file_path, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        total_rows = 0
+        score_all = {
+            "max": None,
+            "min": None,
+            "sum_score": 0,
+            "valid_score": 0
+        }
 
+        subject_groups = {}
 
-    print(f"一共有{total_rows}行数据\n")
-    if score_list:
-        print(f'最高分数:{Max}，最低分数:{Min}，平均分数:{mean:.2f}')
-    else:
-        print('分数缺少数据')
-    for subj_name, item in subject_groups.items():
-        score=item['score']
-        count=item['count']
-        if  score:
-            subject_mean = statistics.mean(score)
-            print(f'科目：{subj_name},记录数：{count},平均分：{subject_mean:.2f}')
+        # 计算行数#
+        for row in reader:
+            total_rows += 1
+
+            # 排除科目空值#
+            subj = row.get("subject", "")
+            if subj.strip() == "":
+                subj = "未标记"
+            # 这里如果读取不到科目，则输出为未标记#
+
+            # 定义分组#
+            if subj not in subject_groups:
+                subject_groups[subj] = {'count': 0, 'sum_score': 0, 'valid_score': 0}
+            subject_groups[subj]['count'] += 1
+
+            # 记录分数，如果为空值，则不计入总计算，避免记为0#
+            score_val = safe_float(row.get("score", ""))
+            if score_val is not None:
+                subject_groups[subj]['sum_score'] += score_val
+                subject_groups[subj]['valid_score'] += 1
+                # 排大小#
+                if score_all['max'] is None and score_all['min'] is None:
+                    score_all['max'] = score_val
+                    score_all['min'] = score_val
+                else:
+                    score_all['max'] = max(score_all['max'], score_val)
+                    score_all['min'] = min(score_all['min'], score_val)
+
+                # 求总值的最大，最小，平均#
+                score_all['sum_score'] += score_val
+                score_all['valid_score'] += 1
+
+        print(f"一共有{total_rows}行数据\n")
+        if score_all['valid_score'] != 0:
+            mean = score_all['sum_score'] / score_all['valid_score']
+            print(f"最高分数:{score_all['max']}，最低分数:{score_all['min']}，平均分数:{mean:.2f}")
         else:
-            print(f'科目：{subj_name},记录数：{count},平均分：缺少数据')
+            print('分数缺少数据')
+        for subj_name, item in subject_groups.items():
+            score = item['sum_score']
+            count = item['count']
+            if item['valid_score'] != 0:
+                subject_mean = score / item['valid_score']
+                print(f'科目：{subj_name},记录数：{count},平均分：{subject_mean:.2f}')
+            else:
+                print(f'科目：{subj_name},记录数：{count},平均分：缺少数据')
 
+
+def main():
+    if len(sys.argv) < 2:
+        print("用法：python csvstat.py 文件1.csv 文件1.csv...")
+        sys.exit(1)
+    file_path = sys.argv[1:]
+    for file_path in file_path:
+        print(f"正在处理你的文件：{file_path}")
+        try:
+            cal_nums(file_path)
+        except FileNotFoundError:
+            print(f"该文件{file_path}不存在")
+            sys.exit(1)
+        except UnicodeDecodeError:
+            print(f"错误：文件{file_path}编码不是utf-8，无法读取")
+            sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
