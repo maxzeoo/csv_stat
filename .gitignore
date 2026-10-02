@@ -1,0 +1,5 @@
+# IDEA / PyCharm 配置目录，不需要提交
+.idea/
+# python 缓存文件
+__pycache__/
+*.pyc
