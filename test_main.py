@@ -12,7 +12,7 @@ def test_safe_float():
 
 def test_cal_nums(tmp_path):
     csv_file = tmp_path / "test.csv"
-    csv_content="""subject,score
+    csv_content=""" subject ,            score               
     数学,80
     ,90
     语文,abc
@@ -22,6 +22,7 @@ def test_cal_nums(tmp_path):
     file_path_str=str(csv_file)
     main.cal_nums(file_path_str)
 
+
 if __name__=='__main__':
     test_safe_float()
-   # test_cal_nums()
+    test_cal_nums()

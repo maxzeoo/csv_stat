@@ -18,6 +18,9 @@ def safe_float(s):
 def cal_nums(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
+        if not reader.fieldnames:
+            print("文件为空或没有表头")
+            return None
         for k in range(len(reader.fieldnames)):
             reader.fieldnames[k]=reader.fieldnames[k].strip()
         if 'subject' not in reader.fieldnames or 'score' not in reader.fieldnames:

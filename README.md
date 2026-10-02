@@ -34,12 +34,6 @@
 python main.py test1.csv test2.csv
 ```
 
-## 代码缺陷
-本代码只在检测表格格式时，临时修改`reader.fieldnames` 列表，但是：只改这个列表，不会改变每一行 row 字典的 key，解析每行数据的时候，仍然拿原始未清洗的表头作为字典 key。
-
-## 优化办法
-1. 读取每行数据的时候，单独对每一行 row 的 key 做 strip 清洗，生成新字典再使用
-2. 读取原始 fieldnames，生成一份清洗后的副本列表，只用副本做判断，完全不动 reader 内部的 fieldnames。
 
 ## 单元测试（开发使用）
 
