@@ -32,6 +32,7 @@
 2. 运行脚本
 ```bash
 python main.py test1.csv test2.csv
+```
 
 ## 单元测试（开发使用）
 
