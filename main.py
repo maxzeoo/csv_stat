@@ -4,6 +4,8 @@ import sys
 
 # 判断分数类型#
 def safe_float(s):
+    if s is None:
+        return None
     s = s.strip()
     if s == "":
         return None
@@ -47,7 +49,7 @@ def cal_nums(file_path):
                 subject_groups[subj]['sum_score'] += score_val
                 subject_groups[subj]['valid_score'] += 1
                 # 排大小#
-                if score_all['max'] is None and score_all['min'] is None:
+                if score_all['max'] is None:
                     score_all['max'] = score_val
                     score_all['min'] = score_val
                 else:
@@ -78,17 +80,17 @@ def main():
     if len(sys.argv) < 2:
         print("用法：python csvstat.py 文件1.csv 文件1.csv...")
         sys.exit(1)
-    file_path = sys.argv[1:]
-    for file_path in file_path:
+    file_paths = sys.argv[1:]
+    for file_path in file_paths:
         print(f"正在处理你的文件：{file_path}")
         try:
             cal_nums(file_path)
         except FileNotFoundError:
             print(f"该文件{file_path}不存在")
-            sys.exit(1)
+            continue
         except UnicodeDecodeError:
             print(f"错误：文件{file_path}编码不是utf-8，无法读取")
-            sys.exit(1)
+            continue
 
 
 if __name__ == "__main__":

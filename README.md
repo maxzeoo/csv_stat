@@ -24,5 +24,5 @@
 1. 将测试数据 `scores.csv` 放在项目根目录
 2. 运行脚本
 ```bash
-python csvstat.py test1.csv test2.csv
+python main.py test1.csv test2.csv
 
