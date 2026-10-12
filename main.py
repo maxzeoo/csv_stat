@@ -27,7 +27,7 @@ def cal_nums(file_path):
             print('检测到表格数据问题：请检查您表格格式和数据')
             return None
         total_rows = 0
-        Name_count = 0
+        score_count = 0
         score_all = {
             "max": None,
             "min": None,
@@ -71,11 +71,11 @@ def cal_nums(file_path):
                     score_all['valid_score'] += 1
 
                 else:
-                    Name_count += 1
+                    score_count += 1
 
         print(f"一共有{total_rows}行数据\n")
-        if Name_count > 0:
-            print(f"有{Name_count}条成绩登记错误\n")
+        if score_count > 0:
+            print(f"有{score_count}条成绩登记错误\n")
         if score_all['valid_score'] != 0:
             mean = score_all['sum_score'] / score_all['valid_score']
             print(f"最高分数:{score_all['max']}，最低分数:{score_all['min']}，平均分数:{mean:.2f}")
@@ -89,7 +89,7 @@ def cal_nums(file_path):
                 print(f'科目：{subj_name},记录数：{count},平均分：{subject_mean:.2f}')
             else:
                 print(f'科目：{subj_name},记录数：{count},平均分：缺少数据')
-
+        return True
 
 def main():
     if len(sys.argv) < 2:
@@ -108,7 +108,7 @@ def main():
             continue
         else :
             if ret is  None:
-                print(f"该文件{file_path}内容不存在")
+                print(f"该文件{file_path}内容不存在或存在错误")
                 continue
 
 
