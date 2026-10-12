@@ -27,6 +27,7 @@ def cal_nums(file_path):
             print('检测到表格数据问题：请检查您表格格式和数据')
             return None
         total_rows = 0
+        Name_count = 0
         score_all = {
             "max": None,
             "min": None,
@@ -45,10 +46,6 @@ def cal_nums(file_path):
             if subj.strip() == "":
                 subj = "未标记"
             # 这里如果读取不到科目，则输出为未标记#
-
-            Name=row.get("name", "")
-            if Name == "" or Name is None:
-                Name = "名字缺失"
 
             # 定义分组#
             if subj not in subject_groups:
@@ -74,9 +71,11 @@ def cal_nums(file_path):
                     score_all['valid_score'] += 1
 
                 else:
-                    print(f'名字：{Name},科目：{subj},成绩：{score_val} 成绩登记错误')
+                    Name_count += 1
 
         print(f"一共有{total_rows}行数据\n")
+        if Name_count > 0:
+            print(f"有{Name_count}条成绩登记错误\n")
         if score_all['valid_score'] != 0:
             mean = score_all['sum_score'] / score_all['valid_score']
             print(f"最高分数:{score_all['max']}，最低分数:{score_all['min']}，平均分数:{mean:.2f}")
@@ -109,6 +108,7 @@ def main():
             continue
         else :
             if ret is  None:
+                print(f"该文件{file_path}内容不存在")
                 continue
 
 
