@@ -1,6 +1,7 @@
 # IDEA / PyCharm 配置目录，不需要提交
 .idea/
 scores.csv
+新建 文本文档.txt
 # python 缓存文件
 __pycache__/
 *.pyc

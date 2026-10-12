@@ -46,6 +46,10 @@ def cal_nums(file_path):
                 subj = "未标记"
             # 这里如果读取不到科目，则输出为未标记#
 
+            Name=row.get("name", "")
+            if Name == "" or Name is None:
+                Name = "名字缺失"
+
             # 定义分组#
             if subj not in subject_groups:
                 subject_groups[subj] = {'count': 0, 'sum_score': 0, 'valid_score': 0}
@@ -54,19 +58,23 @@ def cal_nums(file_path):
             # 记录分数，如果为空值，则不计入总计算，避免记为0#
             score_val = safe_float(row.get("score", ""))
             if score_val is not None:
-                subject_groups[subj]['sum_score'] += score_val
-                subject_groups[subj]['valid_score'] += 1
-                # 排大小#
-                if score_all['max'] is None:
-                    score_all['max'] = score_val
-                    score_all['min'] = score_val
-                else:
-                    score_all['max'] = max(score_all['max'], score_val)
-                    score_all['min'] = min(score_all['min'], score_val)
+                if score_val<=100 and score_val>=0:
+                    subject_groups[subj]['sum_score'] += score_val
+                    subject_groups[subj]['valid_score'] += 1
+                    # 排大小#
+                    if score_all['max'] is None:
+                        score_all['max'] = score_val
+                        score_all['min'] = score_val
+                    else:
+                        score_all['max'] = max(score_all['max'], score_val)
+                        score_all['min'] = min(score_all['min'], score_val)
 
-                # 求总值的最大，最小，平均#
-                score_all['sum_score'] += score_val
-                score_all['valid_score'] += 1
+                    # 求总值的最大，最小，平均#
+                    score_all['sum_score'] += score_val
+                    score_all['valid_score'] += 1
+
+                else:
+                    print(f'名字：{Name},科目：{subj},成绩：{score_val} 成绩登记错误')
 
         print(f"一共有{total_rows}行数据\n")
         if score_all['valid_score'] != 0:
@@ -86,7 +94,7 @@ def cal_nums(file_path):
 
 def main():
     if len(sys.argv) < 2:
-        print("用法：python csvstat.py 文件1.csv 文件2.csv...")
+        print("用法：python main.py 文件1.csv 文件2.csv...")
         sys.exit(1)
     file_paths = sys.argv[1:]
     for file_path in file_paths:
