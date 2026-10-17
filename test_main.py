@@ -70,7 +70,8 @@ def test_score_safe(capsys,tmp_path):
 数学,0
 数学,99
 数学,100
-数学,101"""
+数学,101
+"""
     csv_file.write_text(csv_content,encoding="utf-8")
     file_path_str=str(csv_file)
     main.cal_nums(file_path_str)
