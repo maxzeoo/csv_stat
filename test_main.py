@@ -51,20 +51,17 @@ def test_main_argvprint4(monkeypatch,capsys,tmp_path):
         main.main()
     captured = capsys.readouterr()
     assert f'检测到表格数据问题：请检查您表格格式和数据' in captured.out
-    assert f'该文件{str(csv_file1)}内容不存在或存在错误' in captured.out
 
 def test_main_argvprint5(monkeypatch,capsys,tmp_path):
     csv_file2 = tmp_path / "open2.csv"
-    csv_count2 = (""",
-    数学,79
-    """)
+    csv_count2 = ("""""")
     csv_file2.write_text(csv_count2, encoding="utf-8")
 
     monkeypatch.setattr(sys,'argv',['main.py',str(csv_file2)])
     with pytest.raises(SystemExit) as e:
         main.main()
     captured = capsys.readouterr()
-    assert f'该文件{str(csv_file2)}内容不存在或存在错误' in captured.out
+    assert '文件为空或没有表头' in captured.out
 
 
 

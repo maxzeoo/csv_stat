@@ -80,6 +80,7 @@ def cal_nums(file_path):
             mean = score_all['sum_score'] / score_all['valid_score']
             print(f"最高分数:{score_all['max']}，最低分数:{score_all['min']}，平均分数:{mean:.2f}")
         else:
+            print('警告:所有成绩都无法解析')
             print('分数缺少数据')
         for subj_name, item in subject_groups.items():
             score = item['sum_score']
@@ -111,7 +112,6 @@ def main():
             continue
         else :
             if ret is  None:
-                print(f"该文件{file_path}内容不存在或存在错误")
                 wrong_files += 1
                 continue
     if wrong_files > 0:
