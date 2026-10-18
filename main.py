@@ -16,7 +16,7 @@ def safe_float(s):
 
 
 def cal_nums(file_path):
-    with open(file_path, "r", encoding="utf-8") as f:
+    with open(file_path, "r", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
         if not reader.fieldnames:
             print("文件为空或没有表头")
@@ -96,20 +96,26 @@ def main():
         print("用法：python main.py 文件1.csv 文件2.csv...")
         sys.exit(1)
     file_paths = sys.argv[1:]
+    wrong_files = 0
     for file_path in file_paths:
         print(f"正在处理你的文件：{file_path}")
         try:
             ret=cal_nums(file_path)
         except FileNotFoundError:
             print(f"该文件{file_path}不存在")
+            wrong_files += 1
             continue
         except UnicodeDecodeError:
             print(f"错误：文件{file_path}编码不是utf-8，无法读取")
+            wrong_files += 1
             continue
         else :
             if ret is  None:
                 print(f"该文件{file_path}内容不存在或存在错误")
+                wrong_files += 1
                 continue
+    if wrong_files > 0:
+        sys.exit(1)
 
 
 if __name__ == "__main__":
