@@ -1,4 +1,6 @@
 # csv_stat
+
+[![tests](https://github.com/maxzeoo/csv_stat/actions/workflows/test.yml/badge.svg)](https://github.com/maxzeoo/csv_stat/actions/workflows/test.yml)
 > 纯Python标准库实现的CSV文件统计命令行工具。
 
 ## 目录结构
